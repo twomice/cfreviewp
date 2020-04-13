@@ -184,7 +184,6 @@ class Cfreviewp {
     $this->loader->run();
 
     add_action( 'admin_enqueue_scripts', ['Cfreviewp', 'enqueue_scripts'] );
-    add_filter('caldera_forms_entry_viewer_buttons', ['Cfreviewp', 'caldera_forms_entry_viewer_buttons']);
     add_action('wp_ajax_cfreviewp_review_entry', ['Cfreviewp', 'action_cfreviewp_review_entry']);
 
     /**
@@ -195,6 +194,7 @@ class Cfreviewp {
         'name' => 'PILnet Reviews',
         'description' => 'Allow custom PILnet review processing',
         'processor' => ['Cfreviewp', 'cf_processor_cfreviewp_support_reviews'],
+        'meta_template' => plugin_dir_path(dirname(__FILE__)) . 'caldera-forms/templates/meta.php',
       );
       return $processors;
     }
@@ -217,7 +217,7 @@ class Cfreviewp {
       }
 
 
-      wp_register_script( "cfreviewp_toplevel_page_caldera-forms", plugins_url('admin/js/toplevel_page_caldera-forms.js', dirname(__FILE__)), array('jquery') );
+      wp_register_script( "cfreviewp_toplevel_page_caldera-forms", plugins_url('admin/js/toplevel_page_caldera-forms.js', dirname(__FILE__)), array('jquery'), filemtime(plugin_dir_path(dirname(__FILE__)) . 'admin/js/toplevel_page_caldera-forms.js') );
       wp_localize_script( 'cfreviewp_toplevel_page_caldera-forms', 'cfreviewpAjax', 
         [
           'ajaxUrl' => admin_url( 'admin-ajax.php' ),
@@ -263,48 +263,21 @@ class Cfreviewp {
         }
       }
       if ($processor_id) {
-        $meta = $entry_details['meta']['cf_processor_cfreviewp_support_reviews']['data'][$processor_id]['entry']['review_status'];
+        $meta = $entry_details['meta']['cf_processor_cfreviewp_support_reviews']['data'][$processor_id]['entry']['Review Status'];
         $meta['meta_value'] = $review_meta_value;
         global $wpdb;
         $replace_count = $wpdb->replace($wpdb->prefix . 'cf_form_entry_meta', $meta);
       }
-      $msg = "Entry #{$_POST['entry']} - $review_meta_value";
-      wp_send_json( $msg );
+      $msg = array(
+        'review_status' => $review_meta_value,
+        'entry_id' => $_POST['entry'],
+      );
+      wp_send_json( $msg ); die();
     }
     else {
       status_header(403);
       wp_send_json_error();
     }
-  }
-
-  public static function caldera_forms_entry_viewer_buttons($buttons) {
-    if (current_user_can('edit_others_posts')) {
-      $buttons['cfreviewp_review_entry_approve'] = array(
-        'label' => esc_html__('Accept', 'caldera-forms'),
-        'config' => array(
-          'data-action' => 'cfreviewp_review_entry',
-          'data-entry' => '{{_entry_id}}',
-          'data-form_id' => '{{form}}',
-          'data-response' => 1,
-          'data-nonce' => wp_create_nonce('cfreviewp_review_entry'),
-          'data-request' => 'cfreviewp_review',
-          'data-type' => 'json',
-        ),
-      );
-      $buttons['cfreviewp_review_entry_reject'] = array(
-        'label' => esc_html__('Reject', 'caldera-forms'),
-        'config' => array(
-          'data-action' => 'cfreviewp_review_entry',
-          'data-entry' => '{{_entry_id}}',
-          'data-form_id' => '{{formid}}',
-          'data-response' => 0,
-          'data-nonce' => wp_create_nonce('cfreviewp_review_entry'),
-          'data-request' => 'cfreviewp_review',
-          'data-type' => 'json',
-        ),
-      );
-    }
-    return $buttons;
   }
 
   /**
