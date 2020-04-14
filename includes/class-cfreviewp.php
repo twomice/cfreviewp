@@ -40,7 +40,7 @@ class Cfreviewp {
    */
   public function run() {
 
-    add_action( 'admin_enqueue_scripts', ['Cfreviewp', 'enqueue_scripts'] );
+    add_action('admin_enqueue_scripts', ['Cfreviewp', 'enqueue_scripts']);
     add_action('wp_ajax_cfreviewp_review_entry', ['Cfreviewp', 'action_cfreviewp_review_entry']);
 
     /**
@@ -74,16 +74,14 @@ class Cfreviewp {
       }
 
 
-      wp_register_script( "cfreviewp_toplevel_page_caldera-forms", plugins_url('admin/js/toplevel_page_caldera-forms.js', dirname(__FILE__)), array('jquery'), filemtime(plugin_dir_path(dirname(__FILE__)) . 'admin/js/toplevel_page_caldera-forms.js') );
-      wp_localize_script( 'cfreviewp_toplevel_page_caldera-forms', 'cfreviewpAjax', 
-        [
-          'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-          'forms' => $forms,
+      wp_register_script("cfreviewp_toplevel_page_caldera-forms", plugins_url('admin/js/toplevel_page_caldera-forms.js', dirname(__FILE__)), array('jquery'), filemtime(plugin_dir_path(dirname(__FILE__)) . 'admin/js/toplevel_page_caldera-forms.js'));
+      wp_localize_script('cfreviewp_toplevel_page_caldera-forms', 'cfreviewpAjax', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'forms' => $forms,
         ]
-       );
-      wp_enqueue_script( 'jquery' );
-      wp_enqueue_script( 'cfreviewp_toplevel_page_caldera-forms' );
-
+      );
+      wp_enqueue_script('jquery');
+      wp_enqueue_script('cfreviewp_toplevel_page_caldera-forms');
     }
   }
 
@@ -129,7 +127,8 @@ class Cfreviewp {
         'review_status' => $review_meta_value,
         'entry_id' => $_POST['entry'],
       );
-      wp_send_json( $msg ); die();
+      wp_send_json($msg);
+      die();
     }
     else {
       status_header(403);
