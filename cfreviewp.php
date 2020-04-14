@@ -38,27 +38,6 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'CFREVIEWP_VERSION', '1.0.0' );
 
 /**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-cfreviewp-activator.php
- */
-function activate_cfreviewp() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-cfreviewp-activator.php';
-	Cfreviewp_Activator::activate();
-}
-
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-cfreviewp-deactivator.php
- */
-function deactivate_cfreviewp() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-cfreviewp-deactivator.php';
-	Cfreviewp_Deactivator::deactivate();
-}
-
-register_activation_hook( __FILE__, 'activate_cfreviewp' );
-register_deactivation_hook( __FILE__, 'deactivate_cfreviewp' );
-
-/**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
