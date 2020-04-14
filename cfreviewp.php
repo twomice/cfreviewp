@@ -8,34 +8,26 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              authoruri
+ * @link              https://github.com/twomice/cfreviewp
  * @since             1.0.0
  * @package           Cfreviewp
  *
  * @wordpress-plugin
  * Plugin Name:       Caldera Forms Review for PILnet
- * Plugin URI:        pluginuri
+ * Plugin URI:        https://github.com/twomice/cfreviewp
  * Description:       Provides review of PILnet Matters; passing review creates a Matter in CiviCRM.
  * Version:           1.0.0
  * Author:            Allen Shaw, Joinery
- * Author URI:        authoruri
+ * Author URI:        https://joineryhq.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       cfreviewp
- * Domain Path:       /languages
  */
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
-
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
-define( 'CFREVIEWP_VERSION', '1.0.0' );
 
 /**
  * The core plugin class that is used to define internationalization,
@@ -53,10 +45,8 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-cfreviewp.php';
  * @since    1.0.0
  */
 function run_cfreviewp() {
-
 	$plugin = new Cfreviewp();
 	$plugin->run();
-
 }
 run_cfreviewp();
 

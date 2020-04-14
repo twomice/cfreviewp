@@ -34,92 +34,6 @@ class Cfreviewp {
   public static $REVIEW_STATUS_REJECTED = 'REJECTED';
 
   /**
-   * The unique identifier of this plugin.
-   *
-   * @since    1.0.0
-   * @access   protected
-   * @var      string    $plugin_name    The string used to uniquely identify this plugin.
-   */
-  protected $plugin_name;
-
-  /**
-   * The current version of the plugin.
-   *
-   * @since    1.0.0
-   * @access   protected
-   * @var      string    $version    The current version of the plugin.
-   */
-  protected $version;
-
-  /**
-   * Define the core functionality of the plugin.
-   *
-   * Set the plugin name and the plugin version that can be used throughout the plugin.
-   * Load the dependencies, define the locale, and set the hooks for the admin area and
-   * the public-facing side of the site.
-   *
-   * @since    1.0.0
-   */
-  public function __construct() {
-    if (defined('CFREVIEWP_VERSION')) {
-      $this->version = CFREVIEWP_VERSION;
-    }
-    else {
-      $this->version = '1.0.0';
-    }
-    $this->plugin_name = 'cfreviewp';
-
-    $this->load_dependencies();
-    $this->set_locale();
-    $this->define_admin_hooks();
-    $this->define_public_hooks();
-  }
-
-  /**
-   * Load the required dependencies for this plugin.
-   *
-   * Include the following files that make up the plugin:
-   *
-   * Create an instance of the loader which will be used to register the hooks
-   * with WordPress.
-   *
-   * @since    1.0.0
-   * @access   private
-   */
-  private function load_dependencies() {
-  }
-
-  /**
-   * Define the locale for this plugin for internationalization.
-   *
-   *
-   * @since    1.0.0
-   * @access   private
-   */
-  private function set_locale() {
-  }
-
-  /**
-   * Register all of the hooks related to the admin area functionality
-   * of the plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   */
-  private function define_admin_hooks() {
-  }
-
-  /**
-   * Register all of the hooks related to the public-facing functionality
-   * of the plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   */
-  private function define_public_hooks() {
-  }
-
-  /**
    * Execute all of the hooks with WordPress.
    *
    * @since    1.0.0
@@ -221,27 +135,6 @@ class Cfreviewp {
       status_header(403);
       wp_send_json_error();
     }
-  }
-
-  /**
-   * The name of the plugin used to uniquely identify it within the context of
-   * WordPress and to define internationalization functionality.
-   *
-   * @since     1.0.0
-   * @return    string    The name of the plugin.
-   */
-  public function get_plugin_name() {
-    return $this->plugin_name;
-  }
-
-  /**
-   * Retrieve the version number of the plugin.
-   *
-   * @since     1.0.0
-   * @return    string    The version number of the plugin.
-   */
-  public function get_version() {
-    return $this->version;
   }
 
 }
