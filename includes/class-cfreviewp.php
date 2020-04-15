@@ -125,7 +125,7 @@ class Cfreviewp {
         }
         elseif ($review_meta_value == self::$REVIEW_STATUS_APPROVED) {
           // If response is 'approved', process it carefully.
-          if ($metaMatterId['meta_value'] != 0) {
+          if ($metaMatterId['meta_value'] == 0) {
             // If there's not already a Matter associated with this entry (and if
             // there is, why are we here anyway?), then create one.
             // Get the entry data so we can pass it to the matter creator.
