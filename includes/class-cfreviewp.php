@@ -38,6 +38,16 @@ class Cfreviewp {
         return $processors;
       }
     );
+
+    // Register filter to change required capability for calderaforms.
+    // References:
+    //   - https://wordpress.org/support/topic/grant-editor-allow-full-access-to-caldera-forms/
+    //   - https://calderaforms.com/doc/caldera_forms_manage_cap/
+    add_filter('caldera_forms_manage_cap',
+      function($cap) {
+        return 'admin_caldera_forms';
+      }
+    );
   }
 
   /**
