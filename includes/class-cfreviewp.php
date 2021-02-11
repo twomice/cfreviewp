@@ -192,7 +192,9 @@ class Cfreviewp {
     // slugs instead of field IDs.
     $slugValues = [];
     foreach ($formFields as $formFieldId => $formField) {
-      $slugValues[$formField['slug']] = $entryData[$formFieldId]['value'];
+      // Pass each value through html_entity_decode() because they will be entity_encoded
+      // and we don't want to store them that way in civicrm.
+      $slugValues[$formField['slug']] = html_entity_decode($entryData[$formFieldId]['value']);
     }
     // Initialize civicrm so we can use apis
     civicrm_initialize();
@@ -300,7 +302,13 @@ class Cfreviewp {
         'supplemental_address_1' => $slugValues['address_line_2'],
         'supplemental_address_2' => $slugValues['stateprovince'],
       ];
-      civicrm_api3('address', 'create', $params);
+      try {
+        civicrm_api3('address', 'create', $params);
+      }
+      catch (CiviCRM_API3_Exception $e) {
+        \Civi::log()->error('cfreviewp: error calling civicrm api address.create: '. $e->getMessage(), $params);
+        throw $e;
+      }
     }
 
     // create the matter
