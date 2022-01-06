@@ -20,12 +20,12 @@ var cfreviewp_review = function cfreviewp_review(trigger) {
     data: data,
     success: function (response) {
       // On ajax success:
-      // Set value for status and matter ID.
+      // Set value for status and case ID.
       jQuery('div.cfreviewp-meta-ReviewStatus span.meta-value').html(response.review_status)
-      jQuery('div.cfreviewp-meta-MatterID span.meta-value').html(response.matter_id);
+      jQuery('div.cfreviewp-meta-CaseID span.meta-value').html(response.case_id);
       // Display appropriate buttons.
-      if ((response.matter_id * 1) > 0) {
-        jQuery('button#cfreviewp-button-openMatter').show();
+      if ((response.case_id * 1) > 0) {
+        jQuery('button#cfreviewp-button-openCase').show();
       }
       if (response.review_status == 'REJECTED') {
         jQuery('button#cfreviewp-button-accept').show();
@@ -43,17 +43,22 @@ var cfreviewp_review = function cfreviewp_review(trigger) {
 }
 
 /**
- * Baldrick.js data-request handler for 'view matter' button. Don't really use
+ * Baldrick.js data-request handler for 'view case' button. Don't really use
  * baldrick, could have just used on-click, but anyway.
  *
  * Reference: https://github.com/DavidCramer/BaldrickJS/blob/master/how_to.md
  */
-var cfreviewp_open_matter = function() {
-  var matterId = jQuery('div.cfreviewp-meta-MatterID span.meta-value').html();
-  if (matterId * 1 > 0) {
+var cfreviewp_open_case = function() {
+  var caseId = jQuery('div.cfreviewp-meta-CaseID span.meta-value').html();
+  if (caseId * 1 > 0) {
     // Because we've included civicrm core resources, CRM.url() is available; use
     // it to create the url, and then go to.
-    url = CRM.url('civicrm/matter/view', {'reset': 1, 'action': 'view', 'id': matterId});
+    
+            
+    // FIXME: MUST GET CID
+    
+    
+    url = CRM.url('civicrm/contact/view/case', {'reset': 1, 'action': 'view', 'id': caseId, 'cid': cid});
     window.open(url, '_blank');
   }
 }

@@ -2,10 +2,10 @@
 
 This plugin provides a custom Caldera Forms processor with the following functionality:
 
-* All entries are tracked with a review status and related Matter ID, if any.
+* All entries are tracked with a review status and related Case ID, if any.
 * Any entry can be reviewed as 'REJECTED', or 'ACCEPTED'. Reviews
 * An 'ACCEPTED' review causes the entry to be processed into appropriate CiviCRM
-  contacts and Matters.
+  contacts and Cases.
 
 Controls related to these features appear, for each entry, in the "PILnet Reviews" 
 section of the Caldera Forms entry viewer.

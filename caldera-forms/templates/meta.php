@@ -18,8 +18,8 @@
       <button id="cfreviewp-button-reject" class="ajax-trigger" onClick="baldrickTriggers()" data-entry="{{entry_id}}" data-nonce="<?= $nonce ?>" data-action="cfreviewp_review_entry" data-response="0" data-request="cfreviewp_review" type="button" {{#ifEquals meta_value "UNREVIEWED"}}{{else}}style="display: none;"{{/ifEquals}}>Reject</button>
       <img id="cfreviewp-spinner" src="/wp-includes/images/spinner.gif" style="display:none;"/>
     {{/ifEquals}}
-    {{#ifEquals meta_key "Matter ID"}}
-      <button id="cfreviewp-button-openMatter" type="button" class="ajax-trigger" onClick="baldrickTriggers()" data-request="cfreviewp_open_matter" {{#ifEquals meta_value "0"}}style="display: none;"{{/ifEquals}}>View Matter</button>
+    {{#ifEquals meta_key "Case ID"}}
+      <button id="cfreviewp-button-openCase" type="button" class="ajax-trigger" onClick="baldrickTriggers()" data-request="cfreviewp_open_case" {{#ifEquals meta_value "0"}}style="display: none;"{{/ifEquals}}>View Case</button>
     {{/ifEquals}}
   </div>
 </div>

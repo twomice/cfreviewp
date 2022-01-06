@@ -85,7 +85,7 @@ class Cfreviewp {
   public static function cf_processor_cfreviewp_support_reviews($config, $form, $process_id) {
     return array(
       'Review Status' => self::$REVIEW_STATUS_UNREVIEWED,
-      'Matter ID' => 0,
+      'Case ID' => 0,
     );
   }
 
@@ -125,7 +125,7 @@ class Cfreviewp {
 
         // Define shorthand vars for meta values on this entry.
         $metaReviewStatus = $entry_details['meta']['cf_processor_cfreviewp_support_reviews']['data'][$processor_id]['entry']['Review Status'];
-        $metaMatterId = $entry_details['meta']['cf_processor_cfreviewp_support_reviews']['data'][$processor_id]['entry']['Matter ID'];
+        $metaCaseId = $entry_details['meta']['cf_processor_cfreviewp_support_reviews']['data'][$processor_id]['entry']['Case ID'];
 
         // If response is 'rejected', mark status as such.
         if ($review_meta_value == self::$REVIEW_STATUS_REJECTED) {
@@ -135,36 +135,36 @@ class Cfreviewp {
         }
         elseif ($review_meta_value == self::$REVIEW_STATUS_APPROVED) {
           // If response is 'approved', process it carefully.
-          if ($metaMatterId['meta_value'] == 0) {
-            // If there's not already a Matter associated with this entry (and if
+          if ($metaCaseId['meta_value'] == 0) {
+            // If there's not already a Case associated with this entry (and if
             // there is, why are we here anyway?), then create one.
-            // Get the entry data so we can pass it to the matter creator.
+            // Get the entry data so we can pass it to the case creator.
             $entry = Caldera_Forms::get_entry($entryId, $entry_details['form_id']);
-            // Pass relevant data to matter creator, and get new matter ID.
-            $matter_id = self::processApprovedEntry($entryId, $entry['data'], $entry_form['fields']);
+            // Pass relevant data to case creator, and get new case ID.
+            $case_id = self::processApprovedEntry($entryId, $entry['data'], $entry_form['fields']);
           }
           else {
-            // If somehow where marking 'approved' an entry  which already has an
-            // associated matter (and really, that's not  a standard workflow; not
-            // sure how we would be here), then just use the existing matter ID.
-            $matter_id = $metaMatterId['meta_value'];
+            // If somehow we're marking 'approved' an entry  which already has an
+            // associated case (and really, that's not  a standard workflow; not
+            // sure how we would be here), then just use the existing case ID.
+            $case_id = $metaCaseId['meta_value'];
           }
-          if ($matter_id) {
-            // If we have a valid matter ID, update status and matter ID meta values.
+          if ($case_id) {
+            // If we have a valid case ID, update status and case ID meta values.
             $metaReviewStatus['meta_value'] = $review_meta_value;
             global $wpdb;
             $replace_count = $wpdb->replace($wpdb->prefix . 'cf_form_entry_meta', $metaReviewStatus);
 
-            $metaMatterId['meta_value'] = $matter_id;
+            $metaCaseId['meta_value'] = $case_id;
             global $wpdb;
-            $replace_count = $wpdb->replace($wpdb->prefix . 'cf_form_entry_meta', $metaMatterId);
+            $replace_count = $wpdb->replace($wpdb->prefix . 'cf_form_entry_meta', $metaCaseId);
           }
         }
         // Return a reasonable array of data for this entry.
         $msg = array(
           'review_status' => $metaReviewStatus['meta_value'],
           'entry_id' => $entryId,
-          'matter_id' => $metaMatterId['meta_value'],
+          'case_id' => $metaCaseId['meta_value'],
         );
         wp_send_json($msg);
         // Die; we don't need to do anything else here.
@@ -180,12 +180,12 @@ class Cfreviewp {
 
 
   /**
-   * Create a matter based on the given data from a cf entry.
+   * Create a case based on the given data from a cf entry.
    * @param Integer $entryId Entry ID; not really used here.
    * @param Array $entryData Array of all values from the entry, keyed to field IDs.
    * @param Array $formFields Array of form fields; useful so we can reference fields by
    *    slugs instead of field IDs.
-   * @return Integer The created Matter ID.
+   * @return Integer The created Case ID.
    */
   public static function processApprovedEntry($entryId, $entryData, $formFields) {
     // Build an array of entry values keyed to (more easily human-readable) field
@@ -311,16 +311,19 @@ class Cfreviewp {
       }
     }
 
-    // create the matter
-    $matterParams = [
-      'title' => 'Online request from ' . $slugValues['name_of_the_organization'],
-      'ngo_description' => $slugValues['please_provide_in_no_more_than_5_lines_the_mission_goals_and_activities_of_your_organization'],
-      'description' => $slugValues['please_provide_a_brief_background_of_the_project'],
-      'ngo_id' => $orgContact['id'],
-      'deadline' => $slugValues['by_what_date_should_the_pro_bono_work_be_completed'],
+    // create the case
+    $caseParams = [
+      'contact_id' => $orgContact['id'],
+      'case_type_id' => 5,
+      'subject' => 'Online request from ' . $slugValues['name_of_the_organization'],
+      // Case summary:
+      'custom_34' => $slugValues['please_provide_a_brief_background_of_the_project'],
+      // Deadline:
+      'custom_36' => $slugValues['by_what_date_should_the_pro_bono_work_be_completed'],
+      // Redundant in civicase: 'ngo_description' => $slugValues['please_provide_in_no_more_than_5_lines_the_mission_goals_and_activities_of_your_organization'],
     ];
-    $matter_id = CRM_Matter_BAO_Matter::create($matterParams);
-    return $matter_id;
+    $caseCreateResult = civcrm_api3('case', 'create', $caseParams);
+    return $caseCreateResult['id'];
   }
 
   /**
