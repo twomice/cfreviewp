@@ -7,6 +7,19 @@ var cfreviewp_review = function cfreviewp_review(trigger) {
   var button = trigger.trigger[0];
   var data = jQuery(button).data();
 
+  // This is a legacy matter-based entry if there's metadata for Matter ID;
+  // in this case we must refuse to perform an ACCEPTED review -- because the metadata is
+  // wrong, it's just too much trouble to support this transitional use case.
+  var isLegacyMatterEntry = (jQuery('div.cfreviewp-meta-MatterID').length > 0);
+  if (
+    isLegacyMatterEntry && data.response
+  ) {
+    // Hide buttons and alert that we can't process this matter-based entry.
+    jQuery('button#cfreviewp-button-accept').hide();
+    alert('This entry can only be approved as a Matter, but creation of Matters from Entries is no longer supported. Cannot proceess reviews on this entry.');
+    return;
+  }
+
   // Hide buttons and show spinner; we're going on an ajax adventure.
   jQuery('button#cfreviewp-button-accept').hide();
   jQuery('button#cfreviewp-button-reject').hide();
@@ -27,7 +40,7 @@ var cfreviewp_review = function cfreviewp_review(trigger) {
       if ((response.case_id * 1) > 0) {
         jQuery('button#cfreviewp-button-openCase').show();
       }
-      if (response.review_status == 'REJECTED') {
+      if (response.review_status == 'REJECTED' && !isLegacyMatterEntry) {
         jQuery('button#cfreviewp-button-accept').show();
       }
       if (response.review_status == 'UNREVIEWED') {
@@ -53,12 +66,31 @@ var cfreviewp_open_case = function() {
   if (caseId * 1 > 0) {
     // Because we've included civicrm core resources, CRM.url() is available; use
     // it to create the url, and then go to.
-    
-            
-    // FIXME: MUST GET CID
-    
-    
-    url = CRM.url('civicrm/contact/view/case', {'reset': 1, 'action': 'view', 'id': caseId, 'cid': cid});
+    // Get case contact ID; it's reuired in Manage Case url.
+    CRM.api3('Case', 'getvalue', {
+      "return": "contact_id",
+      "id": caseId
+    }).then(function(result) {
+      url = CRM.url('civicrm/contact/view/case', {'reset': 1, 'action': 'view', 'id': caseId, 'cid': result[0]});
+      window.open(url, '_blank');
+    }, function(error) {
+      alert('CiviCRM API: Error retrieving case client ID.');
+    });
+  }
+}
+
+/**
+ * Baldrick.js data-request handler for 'view matter' button. Don't really use
+ * baldrick, could have just used on-click, but anyway.
+ *
+ * Reference: https://github.com/DavidCramer/BaldrickJS/blob/master/how_to.md
+ */
+var cfreviewp_open_matter = function() {
+  var matterId = jQuery('div.cfreviewp-meta-MatterID span.meta-value').html();
+  if (matterId * 1 > 0) {
+    // Because we've included civicrm core resources, CRM.url() is available; use
+    // it to create the url, and then go to.
+    url = CRM.url('civicrm/matter/view', {'reset': 1, 'action': 'view', 'id': matterId});
     window.open(url, '_blank');
   }
 }

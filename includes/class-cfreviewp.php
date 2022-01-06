@@ -322,7 +322,7 @@ class Cfreviewp {
       'custom_36' => $slugValues['by_what_date_should_the_pro_bono_work_be_completed'],
       // Redundant in civicase: 'ngo_description' => $slugValues['please_provide_in_no_more_than_5_lines_the_mission_goals_and_activities_of_your_organization'],
     ];
-    $caseCreateResult = civcrm_api3('case', 'create', $caseParams);
+    $caseCreateResult = civicrm_api3('case', 'create', $caseParams);
     return $caseCreateResult['id'];
   }
 

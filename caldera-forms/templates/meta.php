@@ -19,7 +19,10 @@
       <img id="cfreviewp-spinner" src="/wp-includes/images/spinner.gif" style="display:none;"/>
     {{/ifEquals}}
     {{#ifEquals meta_key "Case ID"}}
-      <button id="cfreviewp-button-openCase" type="button" class="ajax-trigger" onClick="baldrickTriggers()" data-request="cfreviewp_open_case" {{#ifEquals meta_value "0"}}style="display: none;"{{/ifEquals}}>View Case</button>
+      <button id="cfreviewp-button-openCase" type="button" class="ajax-trigger" onClick="baldrickTriggers()" data-request="cfreviewp_open_case" {{#ifEquals meta_value "0"}}style="display: none;"{{/ifEquals}}>Manage Case</button>
+    {{/ifEquals}}
+    {{#ifEquals meta_key "Matter ID"}}
+      <button id="cfreviewp-button-openMatter" type="button" class="ajax-trigger" onClick="baldrickTriggers()" data-request="cfreviewp_open_matter" {{#ifEquals meta_value "0"}}style="display: none;"{{/ifEquals}}>View Matter</button>
     {{/ifEquals}}
   </div>
 </div>
