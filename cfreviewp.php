@@ -16,7 +16,7 @@
  * Plugin Name:       Caldera Forms Review for PILnet
  * Plugin URI:        https://github.com/twomice/cfreviewp
  * Description:       Provides review of PILnet Cases; passing review creates a Case in CiviCRM.
- * Version:           1.0.2
+ * Version:           2.0.0
  * Author:            Allen Shaw, Joinery
  * Author URI:        https://joineryhq.com
  * License:           GPL-2.0+
