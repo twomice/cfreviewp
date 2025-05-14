@@ -191,10 +191,34 @@ class Cfreviewp {
     // Build an array of entry values keyed to (more easily human-readable) field
     // slugs instead of field IDs.
     $slugValues = [];
+    $supportedSlugs = [
+      'name_of_the_organization',
+      'email',
+      'please_provide_in_no_more_than_5_lines_the_mission_goals_and_activities_of_your_organization',
+      'first_name',
+      'last_name',
+      'position',
+      'phone',
+      'skype_or_other_online_communications_platform_id',
+      'website',
+      'city',
+      'country',
+      'zip__postal_code',
+      'address_line_1',
+      'address_line_2',
+      'stateprovince',
+      'please_provide_a_brief_background_of_the_project',
+      'by_what_date_should_the_pro_bono_work_be_completed',
+    ];
     foreach ($formFields as $formFieldId => $formField) {
+      $slug = $formField['slug'];
+      if (!in_array($slug, $supportedSlugs)) {
+        // This is not a field we need to handle, so just skip it.
+        continue;
+      }
       // Pass each value through html_entity_decode() because they will be entity_encoded
       // and we don't want to store them that way in civicrm.
-      $slugValues[$formField['slug']] = html_entity_decode($entryData[$formFieldId]['value']);
+      $slugValues[$slug] = html_entity_decode($entryData[$formFieldId]['value']);
     }
     // Initialize civicrm so we can use apis
     civicrm_initialize();
